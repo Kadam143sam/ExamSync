@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{base::Layout(~{::body})}">
+
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-dark text-light">
+<style>
+  .news-ticker {
+    height: 100px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .news-items {
+    position: absolute;
+    animation: scrollUp 10s linear infinite;
+  }
+
+  .news-ticker:hover .news-items {
+    animation-play-state: paused;
+  }
+
+  @keyframes scrollUp {
+    0% { top: 100%; }
+    100% { top: -100%; }
+  }
+</style>
+
+<div class="container mt-5">
+
+  <!-- 👋 Welcome Section -->
+  <div class="text-center mb-5">
+    <h2 class="fw-bold text-info">Welcome to ExamSync</h2>
+    <p class="lead text-light">Bringing harmony to exam schedules across India</p>
+    <p class="fs-5">👤 Logged in as: <strong th:text="${username}">User</strong></p>
+  </div>
+
+  <section class="mt-5">
+    <div th:replace="fragments/quicklinks :: quickLinksGrid"></div>
+  </section>
+
+  <!-- 📊 Summary Cards -->
+  <div class="row text-center mb-5" sec:authorize="hasRole('ADMIN')">
+    <div class="col-md-3 mb-3">
+      <div class="card bg-secondary text-light h-100">
+        <div class="card-body">
+          <h5 class="card-title"><i class="bi bi-collection"></i> Total Exams</h5>
+          <p class="display-6 fw-bold" th:text="${total}">0</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card bg-success text-light h-100">
+        <div class="card-body">
+          <h5 class="card-title"><i class="bi bi-check-circle"></i> Approved</h5>
+          <p class="display-6 fw-bold" th:text="${approved}">0</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card bg-warning text-dark h-100">
+        <div class="card-body">
+          <h5 class="card-title"><i class="bi bi-hourglass-split"></i> Pending</h5>
+          <p class="display-6 fw-bold" th:text="${pending}">0</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card bg-danger text-light h-100">
+        <div class="card-body">
+          <h5 class="card-title"><i class="bi bi-x-circle"></i> Rejected</h5>
+          <p class="display-6 fw-bold" th:text="${rejected}">0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📰 News Card (Auto-scrolling) -->
+  <div class="card bg-secondary text-light shadow-sm mb-4 news-ticker">
+    <div class="card-body position-relative p-2">
+      <div class="news-items">
+        <ul class="list-unstyled mb-0">
+          <li>📢 UPSC CSE Prelims 2025 postponed to July 7</li>
+          <li>📢 MPSC Rajyaseva 2025 form correction ends soon</li>
+          <li>📢 NEET UG 2025 paper pattern unchanged</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📆 Upcoming Exam with Countdown -->
+  <!-- 📅 Upcoming Exams -->
+  <h4 class="mb-3 text-info">📅 Upcoming Exams (Next 1 Year)</h4>
+  <ul class="list-group mb-4">
+    <li th:each="exam : ${upcomingExams}"
+        th:if="${exam != null}"
+        class="list-group-item d-flex justify-content-between align-items-center bg-dark text-light">
+      <div>
+        <strong th:text="${exam.title}">Exam Title</strong> -
+        <span th:text="${exam.date}">2025-08-15</span> at
+        <span th:text="${exam.startTime}">10:00</span> for
+        <span th:text="${exam.durationInMinutes + ' mins'}">90 mins</span><br>
+        <small class="text-info">
+          (<span th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), exam.date)}"></span> days left)
+        </small>
+      </div>
+      <span class="badge"
+            th:classappend="(${exam.status.name() == 'APPROVED'} ? 'bg-success' :
+                          (${exam.status.name() == 'PENDING'} ? 'bg-warning text-dark' : 'bg-danger'))"
+            th:text="${exam.status}">PENDING</span>
+    </li>
+  </ul>
+
+
+
+  <!-- 🕒 Recently Proposed Exams -->
+  <div class="mt-5">
+    <h4 class="mb-3">🕒 Recently Proposed Exams</h4>
+    <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-between align-items-center bg-dark text-light"
+          th:each="e : ${exams}">
+        <div>
+          <strong th:text="${e.title}">Exam Title</strong> -
+          <span th:text="${e.date}">2025-07-12</span> at
+          <span th:text="${e.startTime}">10:00</span> for
+          <span th:text="${e.durationInMinutes} + ' mins'">90 mins</span>
+        </div>
+        <span class="badge"
+              th:classappend="(${e.status.name() == 'APPROVED'} ? 'bg-success' :
+                      (${e.status.name() == 'PENDING'} ? 'bg-warning text-dark' : 'bg-danger'))"
+              th:text="${e.status}">PENDING</span>
+
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+<script th:inline="javascript">
+  const approved = /*[[${approved}]]*/ 0;
+  const pending = /*[[${pending}]]*/ 0;
+  const rejected = /*[[${rejected}]]*/ 0;
+
+  const ctx = document.getElementById('examChart')?.getContext('2d');
+  if (ctx) {
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Approved', 'Pending', 'Rejected'],
+        datasets: [{
+          data: [approved, pending, rejected],
+          backgroundColor: ['#198754', '#ffc107', '#dc3545']
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            labels: {
+              color: 'white'
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Countdown section
+  const countdownSpan = document.getElementById('countdown');
+
+  /*<![CDATA[*/
+  var nextExamDate = /*[[${nextExam != null} ? '"' + ${nextExam.date} + '"' : 'null']]*/ null;
+  /*]]>*/
+
+  if (nextExamDate !== null && countdownSpan) {
+    const dateObj = new Date(nextExamDate);
+    const now = new Date();
+    const daysLeft = Math.ceil((dateObj - now) / (1000 * 60 * 60 * 24));
+    countdownSpan.textContent = daysLeft + ' day(s)';
+  } else if (countdownSpan) {
+    countdownSpan.textContent = 'No upcoming exam';
+  }
+</script>
+
+
+
+</body>
+</html>

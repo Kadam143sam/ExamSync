@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base::Layout(~{::body})}">
+<head>
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h2 class="mb-3">Admin Dashboard - Exam Summary</h2>
+    <p class="text-muted">👤 Logged in as: <strong th:text="${username}"></strong></p>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5>Total Exams</h5>
+                    <p class="fs-4" th:text="${total}">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5>Approved</h5>
+                    <p class="fs-4" th:text="${approved}">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5>Pending</h5>
+                    <p class="fs-4" th:text="${pending}">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5>Rejected</h5>
+                    <p class="fs-4" th:text="${rejected}">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exam Table -->
+    <h4>All Exams</h4>
+    <table class="table table-bordered">
+        <thead class="table-light">
+        <tr>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>Duration</th>
+            <th>Institute</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="e : ${exams}">
+            <td th:text="${e.title}">Sample</td>
+            <td th:text="${e.date}">2025-07-15</td>
+            <td th:text="${e.startTime}">10:00</td>
+            <td th:text="${e.durationInMinutes} + ' mins'">90 mins</td>
+            <td th:text="${e.institute.name}">IIT</td>
+            <td>
+                <span class="badge"
+                      th:classappend="${e.status.name() == 'APPROVED'} ? ' bg-success' :
+                                      (${e.status.name() == 'PENDING'} ? ' bg-warning text-dark' : ' bg-danger')"
+                      th:text="${e.status}">PENDING</span>
+            </td>
+            <td>
+                <form th:action="@{'/admin/approve/' + ${e.id}}" method="post" style="display:inline;"
+                      th:if="${e.status.name() == 'PENDING'}">
+                    <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                </form>
+                <form th:action="@{'/admin/reject/' + ${e.id}}" method="post" style="display:inline;"
+                      th:if="${e.status.name() == 'PENDING'}">
+                    <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

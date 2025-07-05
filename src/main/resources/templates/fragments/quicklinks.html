@@ -1,0 +1,95 @@
+<!-- src/main/resources/templates/fragments/quicklinks.html -->
+<!--
+  Reusable Thymeleaf fragment.
+  Include anywhere with:
+      <div th:replace="fragments/quicklinks :: quickLinksGrid"></div>
+-->
+
+<div th:fragment="quickLinksGrid" xmlns:th="http://www.w3.org/1999/xhtml" style="margin:20px;">
+    <h4 class="mb-4 text-info">🔗 Quick Links to Official Institute Websites</h4>
+
+    <!-- Responsive 3‑column grid on desktop, 1‑column on mobile -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+
+        <!-- UPSC -->
+        <div class="col">
+            <div class="card bg-secondary text-light h-100 text-center">
+                <img src="/imgs/upsc.jpg"
+                     alt="UPSC logo" class="card-img-top p-3" style="height:100px;object-fit:contain">
+                <div class="card-body">
+                    <h5 class="card-title">UPSC</h5>
+                    <p class="card-text">Union Public Service Commission</p>
+                    <a href="https://www.upsc.gov.in" target="_blank" class="btn btn-outline-light btn-sm">Visit Site</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- MPSC -->
+        <div class="col">
+            <div class="card bg-secondary text-light h-100 text-center">
+                <img src="https://mpsc.gov.in/Site/Upload/Images/MPSCLOGO.png"
+                     alt="MPSC logo" class="card-img-top p-3" style="height:100px;object-fit:contain">
+                <div class="card-body">
+                    <h5 class="card-title">MPSC</h5>
+                    <p class="card-text">Maharashtra Public Service Commission</p>
+                    <a href="https://mpsc.gov.in" target="_blank" class="btn btn-outline-light btn-sm">Visit Site</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SSC -->
+        <div class="col">
+            <div class="card bg-secondary text-light h-100 text-center">
+                <img src="https://ssc.nic.in/Content/Logos/SSC_LOGO_NEW.png"
+                     alt="SSC logo" class="card-img-top p-3" style="height:100px;object-fit:contain">
+                <div class="card-body">
+                    <h5 class="card-title">SSC</h5>
+                    <p class="card-text">Staff Selection Commission</p>
+                    <a href="https://ssc.nic.in" target="_blank" class="btn btn-outline-light btn-sm">Visit Site</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEET (NTA) -->
+        <div class="col">
+            <div class="card bg-secondary text-light h-100 text-center">
+                <img src="https://neet.nta.nic.in/images/logo1.png"
+                     alt="NEET logo" class="card-img-top p-3" style="height:100px;object-fit:contain">
+                <div class="card-body">
+                    <h5 class="card-title">NEET (NTA)</h5>
+                    <p class="card-text">National Testing Agency</p>
+                    <a href="https://neet.nta.nic.in" target="_blank" class="btn btn-outline-light btn-sm">Visit Site</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- JEE Main (NTA) -->
+        <div class="col">
+            <div class="card bg-secondary text-light h-100 text-center">
+                <img src="https://jeemain.nta.nic.in/images/logo1.png"
+                     alt="JEE Main logo" class="card-img-top p-3" style="height:100px;object-fit:contain">
+                <div class="card-body">
+                    <h5 class="card-title">JEE Main (NTA)</h5>
+                    <p class="card-text">Joint Entrance Examination</p>
+                    <a href="https://jeemain.nta.nic.in" target="_blank" class="btn btn-outline-light btn-sm">Visit Site</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- IBPS -->
+        <div class="col">
+            <div class="card bg-secondary text-light h-100 text-center">
+                <img src="https://www.ibps.in/wp-content/uploads/2020/10/ibps-logo.png"
+                     alt="IBPS logo" class="card-img-top p-3" style="height:100px;object-fit:contain">
+                <div class="card-body">
+                    <h5 class="card-title">IBPS</h5>
+                    <p class="card-text">Banking Personnel Selection</p>
+                    <a href="https://www.ibps.in" target="_blank" class="btn btn-outline-light btn-sm">Visit Site</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add more <div class="col"> blocks here as needed -->
+
+    </div><!-- /.row -->
+</div><!-- /.fragment -->

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base :: Layout(~{::body})}">
+
+<body>
+<style>
+  #calendar {
+    max-width: 100%;
+  }
+  .sidebar {
+    max-height: 600px;
+    overflow-y: auto;
+  }
+  .event-badge {
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+  }
+  .approved { background-color: #28a745; }
+  .pending { background-color: #ffc107; color: black; }
+  .rejected { background-color: #dc3545; }
+</style>
+
+<div class="container-fluid mt-4">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3 sidebar">
+      <h4>Filters</h4>
+      <div class="mb-3">
+        <label>Status</label>
+        <select id="statusFilter" class="form-control">
+          <option value="">All</option>
+          <option value="APPROVED">Approved</option>
+          <option value="PENDING">Pending</option>
+          <option value="REJECTED">Rejected</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label>State</label>
+        <input type="text" id="stateFilter" class="form-control" placeholder="Enter state">
+      </div>
+      <div class="mb-3">
+        <label>Title</label>
+        <input type="text" id="titleFilter" class="form-control" placeholder="Enter title">
+      </div>
+      <button class="btn btn-primary w-100" onclick="applyFilters()">Apply Filters</button>
+
+      <hr>
+      <h4>Exam List</h4>
+      <div id="examList"></div>
+    </div>
+
+    <!-- Calendar -->
+    <div class="col-md-9">
+      <div id="calendar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script>
+  let calendar;
+  let allEvents = [];
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+
+    calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      height: 'auto',
+
+        dayCellDidMount: function(info) {
+    const date = new Date(info.date);
+    if (date.getDay() === 0) { // Sunday
+      info.el.style.backgroundColor = '#f8d7da';
+    }
+  },
+
+      events: function(fetchInfo, successCallback, failureCallback) {
+        fetch(buildUrl())
+          .then(res => res.json())
+          .then(data => {
+            allEvents = data;
+            successCallback(data);
+            renderExamList(data);
+          })
+          .catch(failureCallback);
+      },
+      eventDidMount: function (info) {
+        const status = info.event.title.match(/\((.*?)\)$/)?.[1];
+        if (status === 'APPROVED') {
+          info.el.style.backgroundColor = '#28a745';
+        } else if (status === 'PENDING') {
+          info.el.style.backgroundColor = '#ffc107';
+        } else if (status === 'REJECTED') {
+          info.el.style.backgroundColor = '#dc3545';
+        }
+      }
+    });
+
+    calendar.render();
+  });
+
+  function renderExamList(events) {
+    const container = document.getElementById('examList');
+    container.innerHTML = '';
+
+    events.forEach((event, index) => {
+      const status = event.title.match(/\((.*?)\)$/)?.[1] || '';
+      const baseTitle = event.title.replace(/\s*\(.*\)$/, '');
+      const dateTime = new Date(event.start).toLocaleString();
+
+      const badge = document.createElement('div');
+      badge.className = `event-badge ${status.toLowerCase()}`;
+      badge.innerHTML = `<strong>${baseTitle}</strong><br><small>${dateTime} | ${status}</small>`;
+
+      badge.addEventListener('click', () => {
+        calendar.gotoDate(event.start); // scrolls calendar
+        calendar.select(event.start);   // highlights it temporarily
+      });
+
+      container.appendChild(badge);
+    });
+  }
+
+  function buildUrl() {
+    const status = document.getElementById('statusFilter').value;
+    const state = document.getElementById('stateFilter').value;
+    const title = document.getElementById('titleFilter').value;
+
+    let url = '/api/exams/all?';
+    if (status) url += `status=${status}&`;
+    if (state) url += `state=${state}&`;
+    if (title) url += `title=${title}&`;
+    return url;
+  }
+
+  function applyFilters() {
+    calendar.refetchEvents();
+  }
+</script>
+
+</body>
+</html>

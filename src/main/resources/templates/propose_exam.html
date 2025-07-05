@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base::Layout(~{::body})}">
+
+<body>
+<div class="container mt-4">
+
+    <!-- ✅ Page Title -->
+    <h2 class="text-center text-primary mb-4">Propose an Exam</h2>
+
+    <!-- 💡 Suggested Time Slots -->
+    <div th:if="${suggestions}" class="alert alert-warning mt-3">
+        <h5 class="mb-2">📌 Suggested Time Slots on <span th:text="${exam.date}"></span>:</h5>
+        <ul>
+            <li th:each="slot : ${suggestions}" th:text="${slot}"></li>
+        </ul>
+    </div>
+
+    <!-- 📅 Suggested Free Sundays -->
+    <div th:if="${sundays}" class="alert alert-info mt-3">
+        <h5 class="mb-2">📅 Upcoming Free Sundays:</h5>
+        <ul>
+            <li th:each="s : ${sundays}" th:text="${s}"></li>
+        </ul>
+    </div>
+
+    <!-- 📝 Exam Proposal Form -->
+    <form th:action="@{/institute/propose}" method="post" th:object="${exam}" class="bg-light p-4 rounded shadow-sm mt-3">
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input th:field="*{title}" list="titleList" class="form-control" required/>
+            <datalist id="titleList">
+                <option th:each="e : ${exams}" th:value="${e.title}"/>
+            </datalist>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input type="date" th:field="*{date}" class="form-control" required/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Start Time</label>
+            <input type="time" th:field="*{startTime}" class="form-control" required/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Duration (minutes)</label>
+            <input type="number" th:field="*{durationInMinutes}" class="form-control" min="30" required/>
+        </div>
+        <button type="submit" class="btn btn-success">Submit Exam</button>
+    </form>
+
+    <!-- 🔍 Filter Input -->
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <input type="text" class="form-control" id="examFilter" placeholder="🔍 Search exams by title, date, status...">
+        </div>
+    </div>
+
+    <!-- 📋 Proposed Exams Table -->
+    <div class="mt-3">
+        <h4>Your Proposed Exams</h4>
+        <table class="table table-bordered table-striped mt-2" th:if="${exams}">
+            <thead class="table-light">
+            <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>Duration</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="e : ${exams}">
+                <td th:text="${e.title}">Sample</td>
+                <td th:text="${e.date}">2025-07-15</td>
+                <td th:text="${e.startTime}">10:00</td>
+                <td th:text="${e.durationInMinutes} + ' mins'">90 mins</td>
+                <td th:text="${e.status}">PENDING</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ✅ Toast Notification Box -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="toastMessage" class="toast align-items-center text-white bg-success border-0" role="alert"
+         aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="toastBody"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Bootstrap + JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ✅ JS: Toast Handling -->
+<script th:inline="javascript">
+    window.addEventListener('DOMContentLoaded', () => {
+        const status = /*[[${status != null}]]*/ false;
+        const error = /*[[${error != null}]]*/ false;
+
+        if (status) {
+            showToast("✅ Exam proposed successfully!");
+        } else if (error) {
+            const msg = /*[[${error}]]*/ "Something went wrong";
+            showToast("❌ " + msg, "bg-danger");
+        }
+    });
+
+    function showToast(message, colorClass = 'bg-success') {
+        const toastEl = document.getElementById('toastMessage');
+        const toastBody = document.getElementById('toastBody');
+
+        toastEl.className = `toast align-items-center text-white ${colorClass} border-0`;
+        toastBody.textContent = message;
+
+        const bsToast = new bootstrap.Toast(toastEl);
+        bsToast.show();
+    }
+</script>
+
+<!-- ✅ JS: Filter Exams -->
+<script>
+    document.getElementById("examFilter").addEventListener("input", function () {
+        const filter = this.value.toLowerCase();
+        const rows = document.querySelectorAll("table tbody tr");
+
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+        });
+    });
+</script>
+
+</body>
+</html>
