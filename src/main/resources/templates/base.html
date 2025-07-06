@@ -71,7 +71,6 @@
 </nav>
 
 <main class="container mt-4" th:replace="${content}"></main>
-<div th:insert="~{fragments/chatbot::Chatbot}"></div>
 
 
 <!-- 🌐 Footer Fragment -->
@@ -119,37 +118,6 @@
         </div>
     </div>
 </footer>
-
-<script>
-    function toggleChat() {
-      document.getElementById('chat-widget').classList.toggle('d-none');
-    }
-
-    function sendMessage(event) {
-      event.preventDefault();
-      const input = document.getElementById("userInput");
-      const message = input.value.trim();
-      if (!message) return;
-
-      const chatbox = document.getElementById("chatbox");
-      const userMessage = `<div class="text-end mb-2"><span class="badge bg-primary">${message}</span></div>`;
-      chatbox.innerHTML += userMessage;
-      input.value = "";
-
-      // Send to backend
-      fetch("/chat", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: message })
-      })
-      .then(res => res.text())
-      .then(response => {
-        const botMessage = `<div class="text-start mb-2"><span class="badge bg-secondary">${response}</span></div>`;
-        chatbox.innerHTML += botMessage;
-        chatbox.scrollTop = chatbox.scrollHeight;
-      });
-    }
-</script>
 
 
 <!-- JS Scripts -->
