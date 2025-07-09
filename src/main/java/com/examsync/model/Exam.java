@@ -22,6 +22,7 @@ public class Exam {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    
 
     public Institute getInstitute() {
         return institute;

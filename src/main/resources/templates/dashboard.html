@@ -2,220 +2,268 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="~{base::Layout(~{::body})}">
-
 <head>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <title>ExamSync India – Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 </head>
-
-<body class="bg-dark text-light">
+<body>
 <style>
-  .news-ticker {
-    height: 100px;
-    overflow: hidden;
-    position: relative;
+  .swiper .card {
+    background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+    color: #fff; /* Light text for visibility */
+    border-radius: 1rem;
+    height:100%;
   }
 
-  .news-items {
-    position: absolute;
-    animation: scrollUp 10s linear infinite;
+
+  .swiper .card-img-top {
+    height: 180px;               /* Fixed height for all images */
+    width: 100%;                 /* Full width */
+    object-fit: cover;           /* Crops image without distortion */
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
   }
 
-  .news-ticker:hover .news-items {
-    animation-play-state: paused;
+  .swiper .card-body {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  padding: 1rem;
+  border-radius: 0 0 1rem 1rem;
+}
+
+
+  .swiper .card-title {
+    font-weight: 600;
+    font-size: 1.1rem;
   }
 
-  @keyframes scrollUp {
-    0% { top: 100%; }
-    100% { top: -100%; }
+  .swiper .card-text {
+    font-size: 0.9rem;
+    color: #d1ecf1;
+
+    .swiper-button-prev,
+    .swiper-button-next {
+    color: #00f2ff;
+    filter: drop-shadow(0 0 4px rgba(0,0,0,0.6));
+}
   }
 </style>
 
-<div class="container mt-5">
-
-  <!-- 👋 Welcome Section -->
-  <div class="text-center mb-5">
+<div class="container-fluid dashboard-glass-container">
+  <!-- Header -->
+  <div class="text-center mb-4">
     <h2 class="fw-bold text-info">Welcome to ExamSync</h2>
-    <p class="lead text-light">Bringing harmony to exam schedules across India</p>
-    <p class="fs-5">👤 Logged in as: <strong th:text="${username}">User</strong></p>
+    <p class="lead">Streamlining national exam coordination</p>
+    <p>Logged in as: <strong th:text="${username}">Admin</strong></p>
   </div>
 
-  <section class="mt-5">
-    <div th:replace="fragments/quicklinks :: quickLinksGrid"></div>
-  </section>
+  <!-- 🔹 Featured Institutes Slider -->
+  <div class="container my-4">
+    <h4 class="mb-3">Featured Institutes</h4>
+    <div class="swiper mySwiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <a href="https://upsc.gov.in">
+          <div class="card h-100 shadow glass">
+            <img src="/imgs/upsc.jpg" class="card-img-top" alt="UPSC Logo">
+            <div class="card-body text-center">
+              <h5 class="card-title">UPSC</h5>
+              <p class="card-text">Union Public Service Commission</p>
+            </div>
+          </div>
+          </a>
+        </div>
 
-  <!-- 📊 Summary Cards -->
-  <div class="row text-center mb-5" sec:authorize="hasRole('ADMIN')">
-    <div class="col-md-3 mb-3">
-      <div class="card bg-secondary text-light h-100">
-        <div class="card-body">
-          <h5 class="card-title"><i class="bi bi-collection"></i> Total Exams</h5>
-          <p class="display-6 fw-bold" th:text="${total}">0</p>
+        <div class="swiper-slide">
+          <a href="https://jeemain.nta.ac.in/">
+          <div class="card h-100 shadow glass">
+            <img src="/imgs/mpsc.jpg" class="card-img-top" alt="MPSC Logo">
+            <div class="card-body text-center">
+              <h5 class="card-title">MPSC</h5>
+              <p class="card-text">Maharashtra Public Service Commission</p>
+            </div>
+          </div>
+          </a>
         </div>
+
+        <div class="swiper-slide">
+          <a href="https://ssc.nic.in/">
+          <div class="card h-100 shadow glass">
+            <img src="/imgs/ssc.jpg" class="card-img-top" alt="SSC Logo">
+            <div class="card-body text-center">
+              <h5 class="card-title">SSC CGL</h5>
+              <p class="card-text">Staff Selection Commission</p>
+            </div>
+          </div>
+          </a>
+        </div>
+
+        <div class="swiper-slide">
+          <a href="https://www.nta.ac.in/">
+          <div class="card h-100 shadow glass">
+            <img src="/imgs/NTA.jpg" class="card-img-top" alt="NTA Logo">
+            <div class="card-body text-center">
+              <h5 class="card-title">JEE/NEET/CMAT ETC.</h5>
+              <p class="card-text">National Testing Agency</p>
+            </div>
+          </div>
+          </a>
+        </div>
+
+        <div class="swiper-slide">
+          <a href="https://www.rrbapply.gov.in/#/auth/landing">
+            <div class="card h-100 shadow glass">
+              <img src="/imgs/rrb.jpg" class="card-img-top" alt="RRB Logo">
+              <div class="card-body text-center">
+                <h5 class="card-title">RRB</h5>
+                <p class="card-text">Railway Recruitment Board</p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="swiper-slide">
+          <a href="https://uppsc.up.nic.in/">
+          <div class="card h-100 shadow glass">
+            <img src="/imgs/uppsc.jpeg" class="card-img-top" alt="Uppsc Logo">
+            <div class="card-body text-center">
+              <h5 class="card-title">UPPSC</h5>
+              <p class="card-text">Uttar Pradesh Public Service Commission</p>
+            </div>
+          </div>
+          </a>
+        </div>
+      </div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="row text-center mb-4">
+    <div class="col-md-3 mb-3">
+      <div class="glass-stat p-3">
+        <div class="fs-2"><i class="bi bi-database"></i></div>
+        <h6>Total</h6>
+        <h3 th:text="${total}">0</h3>
       </div>
     </div>
     <div class="col-md-3 mb-3">
-      <div class="card bg-success text-light h-100">
-        <div class="card-body">
-          <h5 class="card-title"><i class="bi bi-check-circle"></i> Approved</h5>
-          <p class="display-6 fw-bold" th:text="${approved}">0</p>
-        </div>
+      <div class="glass-stat p-3">
+        <div class="fs-2"><i class="bi bi-check-circle"></i></div>
+        <h6>Approved</h6>
+        <h3 th:text="${approved}">0</h3>
       </div>
     </div>
     <div class="col-md-3 mb-3">
-      <div class="card bg-warning text-dark h-100">
-        <div class="card-body">
-          <h5 class="card-title"><i class="bi bi-hourglass-split"></i> Pending</h5>
-          <p class="display-6 fw-bold" th:text="${pending}">0</p>
-        </div>
+      <div class="glass-stat p-3">
+        <div class="fs-2"><i class="bi bi-hourglass-split"></i></div>
+        <h6>Pending</h6>
+        <h3 th:text="${pending}">0</h3>
       </div>
     </div>
     <div class="col-md-3 mb-3">
-      <div class="card bg-danger text-light h-100">
-        <div class="card-body">
-          <h5 class="card-title"><i class="bi bi-x-circle"></i> Rejected</h5>
-          <p class="display-6 fw-bold" th:text="${rejected}">0</p>
-        </div>
+      <div class="glass-stat p-3">
+        <div class="fs-2"><i class="bi bi-x-circle"></i></div>
+        <h6>Rejected</h6>
+        <h3 th:text="${rejected}">0</h3>
       </div>
     </div>
   </div>
 
-  <!-- 📰 News Card (Auto-scrolling) -->
-  <div class="card bg-secondary text-light shadow-sm mb-4 news-ticker">
-    <div class="card-body position-relative p-2">
-      <div class="news-items">
-        <ul class="list-unstyled mb-0">
-          <li>📢 UPSC CSE Prelims 2025 postponed to July 7</li>
-          <li>📢 MPSC Rajyaseva 2025 form correction ends soon</li>
-          <li>📢 NEET UG 2025 paper pattern unchanged</li>
+  <!-- Main Section Split -->
+  <div class="row">
+    <!-- Left Panel -->
+    <div class="col-md-8">
+      <h4 class="section-heading">📅 NewsBoard</h4>
+      <div class="news-ticker">
+        <div class="news-items">
+          <ul class="list-unstyled mb-0">
+            <li>📢 UPSC CSE Prelims 2025 postponed to July 7</li>
+            <li>📢 MPSC Rajyaseva 2025 form correction ends soon</li>
+            <li>📢 NEET UG 2025 paper pattern unchanged</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card-list">
+        <h4 class="section-heading">📅 Upcoming Exams (Next 1 Year)</h4>
+        <ul class="list-group">
+          <li th:each="exam : ${upcomingExams}" th:if="${exam != null}"
+              class="list-group-item d-flex justify-content-between align-items-start bg-transparent text-light border-light">
+            <div>
+              <strong th:text="${exam.title}">Exam Title</strong> —
+              <span th:text="${exam.date}">2025-08-15</span> at
+              <span th:text="${exam.startTime}">10:00</span> —
+              <span th:text="${exam.durationInMinutes + ' mins'}">90 mins</span>
+              <br>
+              <small class="text-info">
+                (<span th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), exam.date)}"></span> days left)
+              </small>
+            </div>
+            <span class="badge"
+                  th:classappend="(${exam.status.name() == 'APPROVED'} ? 'bg-success' :
+                                    (${exam.status.name() == 'PENDING'} ? 'bg-warning text-dark' : 'bg-danger'))"
+                  th:text="${exam.status}">PENDING</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="col-md-4">
+      <div class="card-list">
+        <h4 class="section-heading">🕒 Recently Proposed Exams</h4>
+        <ul class="list-group">
+          <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent text-light border-light"
+              th:each="e : ${exams}">
+            <div>
+              <strong th:text="${e.title}">Exam Title</strong> —
+              <span th:text="${e.date}">2025-07-12</span> at
+              <span th:text="${e.startTime}">10:00</span> —
+              <span th:text="${e.durationInMinutes + ' mins'}">90 mins</span>
+            </div>
+            <span class="badge"
+                  th:classappend="(${e.status.name() == 'APPROVED'} ? 'bg-success' :
+                                    (${e.status.name() == 'PENDING'} ? 'bg-warning text-dark' : 'bg-danger'))"
+                  th:text="${e.status}">PENDING</span>
+          </li>
         </ul>
       </div>
     </div>
   </div>
-
-  <!-- 📆 Upcoming Exam with Countdown -->
-  <!-- 📅 Upcoming Exams -->
-  <h4 class="mb-3 text-info">📅 Upcoming Exams (Next 1 Year)</h4>
-  <ul class="list-group mb-4">
-    <li th:each="exam : ${upcomingExams}"
-        th:if="${exam != null}"
-        class="list-group-item d-flex justify-content-between align-items-center bg-dark text-light">
-      <div>
-        <strong th:text="${exam.title}">Exam Title</strong> -
-        <span th:text="${exam.date}">2025-08-15</span> at
-        <span th:text="${exam.startTime}">10:00</span> for
-        <span th:text="${exam.durationInMinutes + ' mins'}">90 mins</span><br>
-        <small class="text-info">
-          (<span th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), exam.date)}"></span> days left)
-        </small>
-      </div>
-      <span class="badge"
-            th:classappend="(${exam.status.name() == 'APPROVED'} ? 'bg-success' :
-                          (${exam.status.name() == 'PENDING'} ? 'bg-warning text-dark' : 'bg-danger'))"
-            th:text="${exam.status}">PENDING</span>
-    </li>
-  </ul>
-
-
-
-  <!-- 🕒 Recently Proposed Exams -->
-  <div class="mt-5">
-    <h4 class="mb-3">🕒 Recently Proposed Exams</h4>
-    <ul class="list-group">
-      <li class="list-group-item d-flex justify-content-between align-items-center bg-dark text-light"
-          th:each="e : ${exams}">
-        <div>
-          <strong th:text="${e.title}">Exam Title</strong> -
-          <span th:text="${e.date}">2025-07-12</span> at
-          <span th:text="${e.startTime}">10:00</span> for
-          <span th:text="${e.durationInMinutes} + ' mins'">90 mins</span>
-        </div>
-        <span class="badge"
-              th:classappend="(${e.status.name() == 'APPROVED'} ? 'bg-success' :
-                      (${e.status.name() == 'PENDING'} ? 'bg-warning text-dark' : 'bg-danger'))"
-              th:text="${e.status}">PENDING</span>
-
-      </li>
-    </ul>
-  </div>
-
 </div>
-<div th:insert="~{fragments/chatbot::Chatbot}"></div>
-<script th:inline="javascript">
-  const approved = /*[[${approved}]]*/ 0;
-  const pending = /*[[${pending}]]*/ 0;
-  const rejected = /*[[${rejected}]]*/ 0;
 
-  const ctx = document.getElementById('examChart')?.getContext('2d');
-  if (ctx) {
-    new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: ['Approved', 'Pending', 'Rejected'],
-        datasets: [{
-          data: [approved, pending, rejected],
-          backgroundColor: ['#198754', '#ffc107', '#dc3545']
-        }]
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+  <script>
+    const swiper = new Swiper('.mySwiper', {
+      slidesPerView: 1,
+      spaceBetween: 20,
+      loop: true, // 🔁 Enables infinite looping
+      autoplay: {
+        delay: 2500,
+        disableOnInteraction: false,
       },
-      options: {
-        plugins: {
-          legend: {
-            labels: {
-              color: 'white'
-            }
-          }
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      breakpoints: {
+        768: {
+          slidesPerView: 2,
+        },
+        1024: {
+          slidesPerView: 3,
         }
       }
     });
-  }
-
-  // Countdown section
-  const countdownSpan = document.getElementById('countdown');
-
-  /*<![CDATA[*/
-  var nextExamDate = /*[[${nextExam != null} ? '"' + ${nextExam.date} + '"' : 'null']]*/ null;
-  /*]]>*/
-
-  if (nextExamDate !== null && countdownSpan) {
-    const dateObj = new Date(nextExamDate);
-    const now = new Date();
-    const daysLeft = Math.ceil((dateObj - now) / (1000 * 60 * 60 * 24));
-    countdownSpan.textContent = daysLeft + ' day(s)';
-  } else if (countdownSpan) {
-    countdownSpan.textContent = 'No upcoming exam';
-  }
 </script>
-<script>
-  function toggleChat() {
-    document.getElementById('chat-widget').classList.toggle('d-none');
-  }
-
-  function sendMessage(event) {
-    event.preventDefault();
-    const input = document.getElementById("userInput");
-    const message = input.value.trim();
-    if (!message) return;
-
-    const chatbox = document.getElementById("chatbox");
-    const userMessage = `<div class="text-end mb-2"><span class="badge bg-primary">${message}</span></div>`;
-    chatbox.innerHTML += userMessage;
-    input.value = "";
-
-    // Send to backend
-    fetch("/chat", {
-      method: "POST",
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: message })
-    })
-    .then(res => res.text())
-    .then(response => {
-      const botMessage = `<div class="text-start mb-2"><span class="badge bg-secondary">${response}</span></div>`;
-      chatbox.innerHTML += botMessage;
-      chatbox.scrollTop = chatbox.scrollHeight;
-    });
-  }
-</script>
-
-
 </body>
 </html>

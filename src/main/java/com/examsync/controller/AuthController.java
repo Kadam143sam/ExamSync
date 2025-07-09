@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -15,24 +16,28 @@ public class AuthController {
 
     private final RegistrationService registrationService;
 
-    // --- show blank form ---
     @GetMapping("/register")
     public String showRegister(Model model) {
-        model.addAttribute("registrationForm", new RegistrationForm());
+        if (!model.containsAttribute("registrationForm")) {
+            model.addAttribute("registrationForm", new RegistrationForm());
+        }
         return "register";
     }
 
-    // --- process submitted form ---
     @PostMapping("/register")
     public String processRegister(
             @Valid @ModelAttribute("registrationForm") RegistrationForm form,
-            BindingResult br) {
-
+            BindingResult br,
+            RedirectAttributes redirectAttributes
+    ) {
         if (br.hasErrors()) {
-            return "register";
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.registrationForm", br);
+            redirectAttributes.addFlashAttribute("registrationForm", form);
+            return "redirect:/register";
         }
 
         registrationService.save(form);
-        return "redirect:/register?success";
+        redirectAttributes.addFlashAttribute("successMessage", "Registration successful! Please login.");
+        return "redirect:/login";
     }
 }

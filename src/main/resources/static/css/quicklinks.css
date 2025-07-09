@@ -1,0 +1,17 @@
+.quick-links-swiper {
+  padding: 1rem 0;
+}
+
+.glass-link-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  transition: transform 0.3s ease;
+  color: white;
+  min-height: 140px;
+}
+
+.glass-link-card:hover {
+  transform: translateY(-5px);
+}

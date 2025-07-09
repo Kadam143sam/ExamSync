@@ -1,84 +1,114 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base::Layout(~{::body})}">
 <head>
     <meta charset="UTF-8">
     <title>Register – ExamSync</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-light">
-<div class="container mt-5">
-    <h2 class="mb-4 text-center">Create an Account</h2>
+    <body>
+        <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        }
 
-    <form th:action="@{/register}" method="post" th:object="${registrationForm}" class="card p-4 shadow-sm">
+        .form-label {
+            font-weight: 600;
+        }
+
+        .register-heading {
+            color: #00bfff;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        .alert-success {
+            background-color: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            color: #28a745;
+        }
+    </style>
+
+
+
+<div class="container my-5">
+    <h2 class="text-center mb-4 register-heading">Create Your Account</h2>
+
+    <!-- ✅ Success Message -->
+    <div th:if="${successMessage}" class="alert alert-success text-center" th:text="${successMessage}"></div>
+
+    <form th:action="@{/register}" th:object="${registrationForm}" method="post"
+          class="card glass-card p-4 text-light">
 
         <!-- COMMON FIELDS -->
         <div class="row g-3">
             <div class="col-md-6">
                 <label class="form-label">Name</label>
-                <input class="form-control" th:field="*{name}" required>
+                <input th:field="*{name}" class="form-control" placeholder="Your full name" required>
             </div>
 
             <div class="col-md-6">
                 <label class="form-label">Email</label>
-                <input class="form-control" th:field="*{email}" type="email" required>
+                <input th:field="*{email}" type="email" class="form-control" placeholder="you@example.com" required>
             </div>
 
             <div class="col-md-6">
                 <label class="form-label">Password</label>
-                <input class="form-control" th:field="*{password}" type="password" required>
+                <input th:field="*{password}" type="password" class="form-control" placeholder="Choose a password" required>
             </div>
 
             <div class="col-md-6">
                 <label class="form-label">Registering as</label>
-                <select class="form-select" th:field="*{userType}" id="userTypeSelect" required>
+                <select th:field="*{userType}" id="userTypeSelect" class="form-select" required>
                     <option value="PUBLIC">Public User</option>
                     <option value="INSTITUTE">Institute</option>
                 </select>
             </div>
         </div>
 
-        <!-- PUBLIC‑USER‑ONLY -->
+        <!-- PUBLIC USER FIELDS -->
         <div id="publicFields" class="row g-3 mt-3">
             <div class="col-md-6">
                 <label class="form-label">Phone</label>
-                <input class="form-control" th:field="*{phone}">
+                <input th:field="*{phone}" type="tel" class="form-control" placeholder="Mobile number">
             </div>
         </div>
 
-        <!-- INSTITUTE‑ONLY -->
-        <div id="instituteFields" class="row g-3 mt-3" style="display:none">
+        <!-- INSTITUTE FIELDS -->
+        <div id="instituteFields" class="row g-3 mt-3 d-none">
             <div class="col-md-6">
                 <label class="form-label">Institute Code</label>
-                <input class="form-control" th:field="*{instituteCode}">
+                <input th:field="*{instituteCode}" class="form-control" placeholder="Unique code">
             </div>
             <div class="col-md-6">
                 <label class="form-label">State</label>
-                <input class="form-control" th:field="*{state}">
+                <input th:field="*{state}" class="form-control" placeholder="State name">
             </div>
         </div>
 
-        <button class="btn btn-primary mt-4 w-100" type="submit">Sign Up</button>
+        <button class="btn btn-info mt-4 w-100 fw-semibold" type="submit">Sign Up</button>
     </form>
 </div>
 
+<!-- Script to show/hide fields -->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const userTypeSelect = document.getElementById('userTypeSelect');
-        const instituteFields = document.getElementById('instituteFields');
-        const publicFields = document.getElementById('publicFields');
+    document.addEventListener('DOMContentLoaded', () => {
+        const userType = document.getElementById('userTypeSelect');
+        const inst = document.getElementById('instituteFields');
+        const pub = document.getElementById('publicFields');
 
-        function toggleFields() {
-            const isInst = userTypeSelect.value === 'INSTITUTE';
-            instituteFields.style.display = isInst ? 'flex' : 'none';
-            publicFields.style.display    = isInst ? 'none' : 'flex';
+        function toggle() {
+            const isInst = userType.value === 'INSTITUTE';
+            inst.classList.toggle('d-none', !isInst);
+            pub.classList.toggle('d-none', isInst);
         }
 
-        userTypeSelect.addEventListener('change', toggleFields);
-
-        // run it once on load to reflect saved selection (if any)
-        toggleFields();
+        userType.addEventListener('change', toggle);
+        toggle(); // initial load
     });
 </script>
-
 </body>
 </html>

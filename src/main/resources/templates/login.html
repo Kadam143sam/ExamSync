@@ -13,6 +13,9 @@
                     Invalid email or password
                 </div>
 
+                <!-- Show only if successMessage is present -->
+                <div th:if="${successMessage}" class="alert alert-success text-center" th:text="${successMessage}"></div>
+
                 <!-- Login Form -->
                 <form th:action="@{/login}" method="post">
                     <div class="mb-3">
@@ -33,6 +36,11 @@
                         <button type="submit" class="btn btn-primary">Login</button>
                     </div>
                 </form>
+
+                <div class="alert alert-info mt-4 text-center" role="alert">
+                    👀 You can access the <a href="/calendar" class="alert-link">Exam Calendar</a> without logging in!
+                </div>
+
 
                 <!-- Register Link -->
                 <div class="text-center mt-4">

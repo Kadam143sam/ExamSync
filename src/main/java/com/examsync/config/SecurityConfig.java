@@ -20,11 +20,23 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login", "/css/**").permitAll()
+                        .requestMatchers(
+                                "/",                 // Home if needed
+                                "/register",         // Allow register page
+                                "/login",            // Allow login page
+                                "/calendar",
+                                "/api/exams/all",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",        // Allow logos/images
+                                "/webjars/**",       // If you're using Bootstrap via webjars
+                                "/fragments/**"      // Optional: if using fragment URLs like /fragments/header
+                        ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/institute/**").hasRole("INSTITUTE")
                         .anyRequest().authenticated()
                 )
+
                 .userDetailsService(customUserDetailsService)
                 .formLogin(form -> form
                         .loginPage("/login")
